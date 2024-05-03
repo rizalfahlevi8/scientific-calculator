@@ -37,7 +37,7 @@ function operator(value, format) {
         operation.value = data.formats.join('');
         result.value = data.result;
     } else {
-        if (data.operations.length > 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+        if (data.operations.length > 0 && data.resultformat.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
             data.operations.pop(); // Hapus operator terakhir jika ada
             data.formats.pop();
         } else {
