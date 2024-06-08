@@ -136,3 +136,74 @@ function logaritma() {
         console.log(log);
     }
 }
+
+function logNatural() {
+    if (data.staging.length !== 0) {
+        i = data.staging.join('');
+        ln = Math.log(data.staging.join(''));
+        data.result = ln;
+        data.formats.push(`ln(${i})`);
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+        data.staging = [];
+        console.log(data);
+    } else if (data.result !== 0 || data.result === 0) {
+        i = data.result;
+        ln = Math.log(data.result);
+        data.result = ln;
+        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("ln")) {
+            j = data.formats[data.formats.length - 1];
+            data.formats.pop();
+            data.formats.push(`ln(${j})`);
+            console.log(j);
+        } else {
+            data.formats.push(`ln(${i})`);
+        }
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+    }
+}
+
+function squareRoot() {
+    if (data.staging.length !== 0) {
+        i = data.staging.join('');
+        sqrt = Math.sqrt(data.staging.join(''));
+        data.result = sqrt;
+        data.formats.push(`√(${i})`);
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+        data.staging = [];
+        console.log(data);
+    } else if (data.result !== 0 || data.result === 0) {
+        i = data.result;
+        sqrt = Math.sqrt(data.result);
+        data.result = sqrt;
+        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("√")) {
+            j = data.formats[data.formats.length - 1];
+            data.formats.pop();
+            data.formats.push(`√(${j})`);
+            console.log(j);
+        } else {
+            data.formats.push(`√(${i})`);
+        }
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+    }
+}
+
+//disable calculate button
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach(button => {
+    button.addEventListener("click", function () {
+        if (button.id === "calculate") {
+            button.disabled = true;
+        } else {
+            document.getElementById("calculate").disabled = false;
+        }
+    });
+});
