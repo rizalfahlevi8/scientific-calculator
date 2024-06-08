@@ -9,23 +9,26 @@ let data = {
 }
 console.log(data);
 
+//------------------ CLEARDATA ------------------------
 function clearData() {
     data.staging = [];
     data.result = 0; // Ubah menjadi 0 daripada []
     data.operations = [];
     data.formats = [];
+    data.resultformat = [];
     operation.value = data.formats.join('');
     result.value = data.staging.join('');
     console.log(data);
 }
 
-
+//------------------ NUMBER ------------------------
 function number(value) {
     data.staging.push(value);
     result.value = data.staging.join('');
     console.log(data);
 }
 
+//------------------ OPERATOR ------------------------
 function operator(value, format) {
     if (data.staging.length !== 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
         // Jika staging tidak kosong dan nilai terakhir dari operations bukan angka
@@ -62,38 +65,7 @@ function operator(value, format) {
     console.log(data);
 }
 
-
-function calculate() {
-    if (data.staging.length !== 0) {
-        data.operations = data.operations.concat(data.staging);
-        data.formats = data.formats.concat(data.staging);
-    } else {
-        data.operations = data.operations.concat(data.result);
-        if (data.resultformat.length === 0) {
-            data.formats = data.formats.concat(data.result);
-        } else {
-            data.resultformat = [];
-        }
-    }
-    data.staging = [];
-    formula_str = data.operations.join('');
-    try {
-        data.result = eval(formula_str);
-        data.operations.push('=');
-        data.formats.push('=');
-        operation.value = data.formats.join('');
-        result.value = data.result;
-        data.operations = [];
-        data.formats = [];
-    } catch (error) {
-        if (error instanceof SyntaxError) {
-            result = "Syntax Error!"
-            return;
-        }
-    }
-    console.log(data)
-}
-
+//------------------ PERCENTAGE ------------------------
 function percentage() {
     if (data.staging.length !== 0) {
         persent = data.staging.join('') * 0.01;
@@ -107,6 +79,7 @@ function percentage() {
     }
 }
 
+//------------------ LOGARITMA ------------------------
 function logaritma() {
     if (data.staging.length !== 0) {
         i = data.staging.join('');
@@ -137,6 +110,7 @@ function logaritma() {
     }
 }
 
+//------------------ LOGNATURAL ------------------------
 function logNatural() {
     if (data.staging.length !== 0) {
         i = data.staging.join('');
@@ -166,6 +140,7 @@ function logNatural() {
     }
 }
 
+//------------------ SQUAREROOT ------------------------
 function squareRoot() {
     if (data.staging.length !== 0) {
         i = data.staging.join('');
@@ -193,6 +168,75 @@ function squareRoot() {
         result.value = data.result;
         operation.value = data.formats.join('');
     }
+}
+
+//------------------ FACTORIAL ------------------------
+function factorial(){
+    if(data.staging.length !== 0){
+        i = data.staging.join('');
+        fact = factorialCalculation(data.staging.join(''));
+        data.result = fact;
+        data.formats.push(`fact(${i})`);
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+        data.staging = [];
+        console.log(data);
+    } else if (data.result !== 0 || data.result === 0) {
+        i = data.result;
+        fact = factorialCalculation(data.result);
+        data.result = fact;
+        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("fact")){
+            j = data.formats[data.formats.length - 1];
+            data.formats.pop();
+            data.formats.push(`fact(${j})`);
+        } else {
+            data.formats.push(`fact(${i})`);
+        }
+        data.resultformat.push('aktif');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+    }
+}
+
+function factorialCalculation(value){
+    let result = 1;
+    for (let i = 2; i <= value; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+//----------------- CALCULATE --------------------------
+function calculate() {
+    if (data.staging.length !== 0) {
+        data.operations = data.operations.concat(data.staging);
+        data.formats = data.formats.concat(data.staging);
+    } else {
+        data.operations = data.operations.concat(data.result);
+        if (data.resultformat.length === 0) {
+            data.formats = data.formats.concat(data.result);
+        } else {
+            data.resultformat = [];
+        }
+    }
+    data.staging = [];
+    formula_str = data.operations.join('');
+    try {
+        data.result = eval(formula_str);
+        data.operations.push('=');
+        data.formats.push('=');
+        operation.value = data.formats.join('');
+        result.value = data.result;
+        data.operations = [];
+        data.formats = [];
+    } catch (error) {
+        if (error instanceof SyntaxError) {
+            result = "Syntax Error!"
+            return;
+        }
+    }
+    console.log(data)
 }
 
 //disable calculate button
