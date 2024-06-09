@@ -86,7 +86,7 @@ function logaritma() {
         log = Math.log10(data.staging.join(''));
         data.result = log;
         data.formats.push(`log(${i})`);
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
         data.staging = [];
@@ -103,7 +103,7 @@ function logaritma() {
         } else {
             data.formats.push(`log(${i})`);
         }
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
         console.log(log);
@@ -117,7 +117,7 @@ function logNatural() {
         ln = Math.log(data.staging.join(''));
         data.result = ln;
         data.formats.push(`ln(${i})`);
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
         data.staging = [];
@@ -134,7 +134,7 @@ function logNatural() {
         } else {
             data.formats.push(`ln(${i})`);
         }
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
     }
@@ -147,7 +147,7 @@ function squareRoot() {
         sqrt = Math.sqrt(data.staging.join(''));
         data.result = sqrt;
         data.formats.push(`√(${i})`);
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
         data.staging = [];
@@ -164,7 +164,7 @@ function squareRoot() {
         } else {
             data.formats.push(`√(${i})`);
         }
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
     }
@@ -177,7 +177,7 @@ function factorial(){
         fact = factorialCalculation(data.staging.join(''));
         data.result = fact;
         data.formats.push(`fact(${i})`);
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
         data.staging = [];
@@ -193,7 +193,7 @@ function factorial(){
         } else {
             data.formats.push(`fact(${i})`);
         }
-        data.resultformat.push('aktif');
+        data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
     }
