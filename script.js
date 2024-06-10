@@ -12,7 +12,7 @@ console.log(data);
 //------------------ CLEARDATA ------------------------
 function clearData() {
     data.staging = [];
-    data.result = 0; // Ubah menjadi 0 daripada []
+    data.result = 0;
     data.operations = [];
     data.formats = [];
     data.resultformat = [];
@@ -28,14 +28,29 @@ function number(value) {
     console.log(data);
 }
 
+//------------------ CONSTANT ------------------------
+function constant(operationType) {
+    const operations = {
+        π: () => Math.PI,
+        e: () => Math.E,
+    };
+
+    data.result = operations[operationType]();
+    data.formats.push(operationType);
+    data.resultformat.push('active');
+    operation.value = data.formats.join('');
+    result.value = data.result;
+    console.log(data);
+}
+
 //------------------ OPERATOR ------------------------
+// consists of addition, subtraction, multiplication, division, and powers of numbers functions
 function operator(value, format) {
     if (data.staging.length !== 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
-        // Jika staging tidak kosong dan nilai terakhir dari operations bukan angka
         if (data.formats.length === 0 || (data.formats.length > 0 && !data.formats[data.formats.length - 1].includes(")"))) {
-            data.operations.push(data.staging.join('')); // Tambahkan nilai staging ke operasi
+            data.operations.push(data.staging.join(''));
             data.formats.push(data.staging.join(''));
-            data.staging = []; // Kosongkan staging setelah ditambahkan ke operasi
+            data.staging = [];
             formula_str = balanceParentheses(data.operations);
             data.result = eval(formula_str.join(''));
             operation.value = data.formats.join('');
@@ -47,7 +62,7 @@ function operator(value, format) {
             && data.operations[data.operations.length - 1] !== "("
             && data.operations[data.operations.length - 1] !== ")"
         ) {
-            data.operations.pop(); // Hapus operator terakhir jika ada
+            data.operations.pop();
             data.formats.pop();
         } else {
             if (data.staging.length !== 0 && data.operations[data.operations.length - 1] !== ")") {
@@ -131,11 +146,15 @@ function math_function(operationType) {
 }
 
 function factorialCalculation(value) {
-    let result = 1;
-    for (let i = 2; i <= value; i++) {
-        result *= i;
+    if (value < 0) {
+        return "Invalid input";
     }
-    return result;
+    else if (value == 0) {
+        return 1;
+    }
+    else {
+        return value * factorialCalculation(value - 1);
+    }
 }
 
 
@@ -235,7 +254,7 @@ function parenthesesOpen() {
         data.staging = [];
         operation.value = data.formats.join('');
         result.value = data.result;
-    }else if (data.staging.length === 0 && data.operations[data.operations.length - 1] === ")"){
+    } else if (data.staging.length === 0 && data.operations[data.operations.length - 1] === ")") {
         data.operations.push('*', '(');
         data.formats.push('×', '(');
         data.staging = [];
@@ -248,7 +267,7 @@ function parenthesesOpen() {
 function balanceParentheses(value) {
     data_temporary = [...value];
     if (!Array.isArray(data_temporary)) {
-        console.error("Data yang diterima bukan array");
+        console.error("The data received is not an array");
         return;
     }
 
