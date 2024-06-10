@@ -21,8 +21,9 @@ function clearData() {
     console.log(data);
 }
 
-//------------------ NUMBER ------------------------
+//------------------ NUMBER --------------------------
 function number(value) {
+    data.staging = [];
     data.staging.push(value);
     result.value = data.staging.join('');
     console.log(data);
@@ -32,15 +33,17 @@ function number(value) {
 function operator(value, format) {
     if (data.staging.length !== 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
         // Jika staging tidak kosong dan nilai terakhir dari operations bukan angka
-        data.operations.push(data.staging.join('')); // Tambahkan nilai staging ke operasi
-        data.formats.push(data.staging.join(''));
-        data.staging = []; // Kosongkan staging setelah ditambahkan ke operasi
-        formula_str = data.operations.join('');
-        data.result = eval(formula_str);
-        operation.value = data.formats.join('');
-        result.value = data.result;
+        if (data.formats.length === 0 || (data.formats.length > 0 && !data.formats[data.formats.length - 1].includes(")"))) {
+            data.operations.push(data.staging.join('')); // Tambahkan nilai staging ke operasi
+            data.formats.push(data.staging.join(''));
+            data.staging = []; // Kosongkan staging setelah ditambahkan ke operasi
+            formula_str = balanceParentheses(data.operations);
+            data.result = eval(formula_str.join(''));
+            operation.value = data.formats.join('');
+            result.value = data.result;
+        }
     } else {
-        if (data.operations.length > 0 && data.resultformat.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+        if (data.operations.length > 0 && data.resultformat.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1])) && data.operations[data.operations.length - 1] !== "(") {
             data.operations.pop(); // Hapus operator terakhir jika ada
             data.formats.pop();
         } else {
@@ -53,6 +56,7 @@ function operator(value, format) {
                 data.operations = data.operations.concat(data.result);
                 if (data.resultformat.length === 0) {
                     data.formats = data.formats.concat(data.result);
+                    result.value = data.result;
                 } else {
                     data.resultformat = [];
                 }
@@ -171,8 +175,8 @@ function squareRoot() {
 }
 
 //------------------ FACTORIAL ------------------------
-function factorial(){
-    if(data.staging.length !== 0){
+function factorial() {
+    if (data.staging.length !== 0) {
         i = data.staging.join('');
         fact = factorialCalculation(data.staging.join(''));
         data.result = fact;
@@ -186,7 +190,7 @@ function factorial(){
         i = data.result;
         fact = factorialCalculation(data.result);
         data.result = fact;
-        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("fact")){
+        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("fact")) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
             data.formats.push(`fact(${j})`);
@@ -199,7 +203,7 @@ function factorial(){
     }
 }
 
-function factorialCalculation(value){
+function factorialCalculation(value) {
     let result = 1;
     for (let i = 2; i <= value; i++) {
         result *= i;
@@ -221,9 +225,9 @@ function calculate() {
         }
     }
     data.staging = [];
-    formula_str = data.operations.join('');
+    formula_str = balanceParentheses(data.operations);
     try {
-        data.result = eval(formula_str);
+        data.result = eval(formula_str.join(''));
         data.operations.push('=');
         data.formats.push('=');
         operation.value = data.formats.join('');
@@ -251,3 +255,85 @@ buttons.forEach(button => {
         }
     });
 });
+
+//------------------ PARENTHESES CLOSE ---------------------
+function parenthesesClose() {
+    let jumlah_open = data.operations.filter(function (item) {
+        return item === "(";
+    }).length;
+    let jumlah_close = data.operations.filter(function (item) {
+        return item === ")";
+    }).length;
+    jumlah = jumlah_open - jumlah_close;
+
+    if (jumlah > 0) {
+        if (data.staging.length !== 0) {
+            data.operations.push(data.staging.join(''), ')');
+            data.formats.push(data.staging.join(''), ')');
+            formula_str = balanceParentheses(data.operations);
+            data.result = eval(formula_str.join(''));
+            operation.value = data.formats.join('');
+            result.value = data.result;
+        } else if (data.staging.length === 0) {
+            data.operations.push(data.result, ')');
+            data.formats.push(data.result, ')');
+            formula_str = balanceParentheses(data.operations);
+            console.log(formula_str);
+            data.result = eval(formula_str.join(''));
+            operation.value = data.formats.join('');
+            result.value = data.result;
+        }
+    }
+    console.log(data);
+}
+
+//------------------ PARENTHESES OPEN ----------------------
+function parenthesesOpen() {
+    if (data.staging.length !== 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+        data.operations.push(data.staging.join(''), '*', '(');
+        data.formats.push(data.staging.join(''), '×', '(');
+        formula_str = balanceParentheses(data.operations);
+        data.result = eval(formula_str.join(''));
+        data.staging = [];
+        operation.value = data.formats.join('');
+        result.value = data.result;
+    } else if (data.staging.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+        data.operations.push('(');
+        data.formats.push('(');
+        data.staging = [];
+        operation.value = data.formats.join('');
+        result.value = data.result;
+    }
+    console.log(data);
+}
+
+function balanceParentheses(value) {
+    data_temporary = [...value];
+    if (!Array.isArray(data_temporary)) {
+        console.error("Data yang diterima bukan array");
+        return;
+    }
+
+    if (data_temporary.length !== 0) {
+        let jumlah_open = data_temporary.filter(function (item) {
+            return item === "(";
+        }).length;
+        let jumlah_close = data_temporary.filter(function (item) {
+            return item === ")";
+        }).length;
+        jumlah = jumlah_open - jumlah_close;
+        console.log(jumlah);
+
+        if (isNaN(parseFloat(data_temporary[data_temporary.length - 1])) && !data_temporary[data_temporary.length - 1].includes(")")) {
+            data_temporary.push(1);
+            for (let i = 0; i <= jumlah - 1; i++) {
+                data_temporary.push(')');
+            }
+        } else {
+            for (let i = 0; i <= jumlah - 1; i++) {
+                data_temporary.push(')');
+            }
+        }
+    }
+    return data_temporary;
+}
