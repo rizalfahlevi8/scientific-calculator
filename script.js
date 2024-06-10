@@ -23,7 +23,6 @@ function clearData() {
 
 //------------------ NUMBER --------------------------
 function number(value) {
-    data.staging = [];
     data.staging.push(value);
     result.value = data.staging.join('');
     console.log(data);
@@ -305,9 +304,15 @@ function parenthesesOpen() {
         data.staging = [];
         operation.value = data.formats.join('');
         result.value = data.result;
-    } else if (data.staging.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+    } else if (data.staging.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1])) && data.operations[data.operations.length - 1] !== ")") {
         data.operations.push('(');
         data.formats.push('(');
+        data.staging = [];
+        operation.value = data.formats.join('');
+        result.value = data.result;
+    }else if (data.staging.length === 0 && data.operations[data.operations.length - 1] === ")"){
+        data.operations.push('*', '(');
+        data.formats.push('×', '(');
         data.staging = [];
         operation.value = data.formats.join('');
         result.value = data.result;
