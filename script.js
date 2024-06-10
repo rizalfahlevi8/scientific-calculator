@@ -99,7 +99,7 @@ function logaritma() {
         i = data.result;
         log = Math.log10(data.result);
         data.result = log;
-        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("log")) {
+        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
             data.formats.push(`log(${j})`);
@@ -125,12 +125,11 @@ function logNatural() {
         result.value = data.result;
         operation.value = data.formats.join('');
         data.staging = [];
-        console.log(data);
     } else if (data.result !== 0 || data.result === 0) {
         i = data.result;
         ln = Math.log(data.result);
         data.result = ln;
-        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("ln")) {
+        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
             data.formats.push(`ln(${j})`);
@@ -142,6 +141,7 @@ function logNatural() {
         result.value = data.result;
         operation.value = data.formats.join('');
     }
+    console.log(data);
 }
 
 //------------------ SQUAREROOT ------------------------
@@ -190,7 +190,7 @@ function factorial() {
         i = data.result;
         fact = factorialCalculation(data.result);
         data.result = fact;
-        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("fact")) {
+        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
             data.formats.push(`fact(${j})`);
