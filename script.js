@@ -86,13 +86,27 @@ function percentage() {
     }
 }
 
-//------------------ LOGARITMA ------------------------
-function logaritma() {
+//----------------- MATH FUNCTION ----------------------
+// consisting of logarithms, square roots, natural logs, and factorials
+function math_function(operationType) {
+    const operations = {
+        log: (x) => Math.log10(x),
+        ln: (x) => Math.log(x),
+        fact: (x) => factorialCalculation(x),
+        sqrt: (x) => Math.sqrt(x)
+    };
+
+    const formatMap = {
+        log: (i) => `log(${i})`,
+        ln: (i) => `ln(${i})`,
+        fact: (i) => `fact(${i})`,
+        sqrt: (i) => `√(${i})`
+    };
+
     if (data.staging.length !== 0) {
         i = data.staging.join('');
-        log = Math.log10(data.staging.join(''));
-        data.result = log;
-        data.formats.push(`log(${i})`);
+        data.result = operations[operationType](i);
+        data.formats.push(formatMap[operationType](i));
         data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
@@ -100,110 +114,20 @@ function logaritma() {
         console.log(data);
     } else if (data.result !== 0 || data.result === 0) {
         i = data.result;
-        log = Math.log10(data.result);
-        data.result = log;
-        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
+        data.result = operations[operationType](i);
+        if (data.formats.length > 0 && /(ln|log|fact|√)/.test(data.formats[data.formats.length - 1])) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
-            data.formats.push(`log(${j})`);
+            data.formats.push(formatMap[operationType](j));
             console.log(j);
         } else {
-            data.formats.push(`log(${i})`);
-        }
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-        console.log(log);
-    }
-}
-
-//------------------ LOGNATURAL ------------------------
-function logNatural() {
-    if (data.staging.length !== 0) {
-        i = data.staging.join('');
-        ln = Math.log(data.staging.join(''));
-        data.result = ln;
-        data.formats.push(`ln(${i})`);
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-        data.staging = [];
-    } else if (data.result !== 0 || data.result === 0) {
-        i = data.result;
-        ln = Math.log(data.result);
-        data.result = ln;
-        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
-            j = data.formats[data.formats.length - 1];
-            data.formats.pop();
-            data.formats.push(`ln(${j})`);
-            console.log(j);
-        } else {
-            data.formats.push(`ln(${i})`);
+            data.formats.push(formatMap[operationType](i));
         }
         data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
     }
     console.log(data);
-}
-
-//------------------ SQUAREROOT ------------------------
-function squareRoot() {
-    if (data.staging.length !== 0) {
-        i = data.staging.join('');
-        sqrt = Math.sqrt(data.staging.join(''));
-        data.result = sqrt;
-        data.formats.push(`√(${i})`);
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-        data.staging = [];
-        console.log(data);
-    } else if (data.result !== 0 || data.result === 0) {
-        i = data.result;
-        sqrt = Math.sqrt(data.result);
-        data.result = sqrt;
-        if (data.formats.length > 0 && data.formats[data.formats.length - 1].includes("√")) {
-            j = data.formats[data.formats.length - 1];
-            data.formats.pop();
-            data.formats.push(`√(${j})`);
-            console.log(j);
-        } else {
-            data.formats.push(`√(${i})`);
-        }
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-    }
-}
-
-//------------------ FACTORIAL ------------------------
-function factorial() {
-    if (data.staging.length !== 0) {
-        i = data.staging.join('');
-        fact = factorialCalculation(data.staging.join(''));
-        data.result = fact;
-        data.formats.push(`fact(${i})`);
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-        data.staging = [];
-        console.log(data);
-    } else if (data.result !== 0 || data.result === 0) {
-        i = data.result;
-        fact = factorialCalculation(data.result);
-        data.result = fact;
-        if (data.formats.length > 0 && /(ln|log|fact)/.test(data.formats[data.formats.length - 1])) {
-            j = data.formats[data.formats.length - 1];
-            data.formats.pop();
-            data.formats.push(`fact(${j})`);
-        } else {
-            data.formats.push(`fact(${i})`);
-        }
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-    }
 }
 
 function factorialCalculation(value) {
@@ -213,6 +137,7 @@ function factorialCalculation(value) {
     }
     return result;
 }
+
 
 //----------------- CALCULATE --------------------------
 function calculate() {
