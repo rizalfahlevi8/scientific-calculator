@@ -43,16 +43,20 @@ function operator(value, format) {
             result.value = data.result;
         }
     } else {
-        if (data.operations.length > 0 && data.resultformat.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1])) && data.operations[data.operations.length - 1] !== "(") {
+        if (data.operations.length > 0 && data.resultformat.length === 0
+            && isNaN(parseFloat(data.operations[data.operations.length - 1]))
+            && data.operations[data.operations.length - 1] !== "("
+            && data.operations[data.operations.length - 1] !== ")"
+        ) {
             data.operations.pop(); // Hapus operator terakhir jika ada
             data.formats.pop();
         } else {
-            if (data.staging.length !== 0) {
+            if (data.staging.length !== 0 && data.operations[data.operations.length - 1] !== ")") {
                 data.operations.push(data.staging.join(''));
                 data.formats.push(data.staging.join(''));
                 data.result = parseFloat(data.staging.join(''));
                 data.staging = [];
-            } else {
+            } else if (data.operations[data.operations.length - 1] !== ")") {
                 data.operations = data.operations.concat(data.result);
                 if (data.resultformat.length === 0) {
                     data.formats = data.formats.concat(data.result);
@@ -213,15 +217,17 @@ function factorialCalculation(value) {
 
 //----------------- CALCULATE --------------------------
 function calculate() {
-    if (data.staging.length !== 0) {
-        data.operations = data.operations.concat(data.staging);
-        data.formats = data.formats.concat(data.staging);
-    } else {
-        data.operations = data.operations.concat(data.result);
-        if (data.resultformat.length === 0) {
-            data.formats = data.formats.concat(data.result);
+    if (data.operations[data.operations.length - 1] !== ")") {
+        if (data.staging.length !== 0) {
+            data.operations = data.operations.concat(data.staging);
+            data.formats = data.formats.concat(data.staging);
         } else {
-            data.resultformat = [];
+            data.operations = data.operations.concat(data.result);
+            if (data.resultformat.length === 0) {
+                data.formats = data.formats.concat(data.result);
+            } else {
+                data.resultformat = [];
+            }
         }
     }
     data.staging = [];
@@ -236,7 +242,7 @@ function calculate() {
         data.formats = [];
     } catch (error) {
         if (error instanceof SyntaxError) {
-            result = "Syntax Error!"
+            result.value = "Syntax Error!"
             return;
         }
     }
@@ -272,6 +278,7 @@ function parenthesesClose() {
             data.formats.push(data.staging.join(''), ')');
             formula_str = balanceParentheses(data.operations);
             data.result = eval(formula_str.join(''));
+            data.staging = [];
             operation.value = data.formats.join('');
             result.value = data.result;
         } else if (data.staging.length === 0) {
@@ -280,6 +287,7 @@ function parenthesesClose() {
             formula_str = balanceParentheses(data.operations);
             console.log(formula_str);
             data.result = eval(formula_str.join(''));
+            data.staging = [];
             operation.value = data.formats.join('');
             result.value = data.result;
         }
@@ -322,7 +330,6 @@ function balanceParentheses(value) {
             return item === ")";
         }).length;
         jumlah = jumlah_open - jumlah_close;
-        console.log(jumlah);
 
         if (isNaN(parseFloat(data_temporary[data_temporary.length - 1])) && !data_temporary[data_temporary.length - 1].includes(")")) {
             data_temporary.push(1);
