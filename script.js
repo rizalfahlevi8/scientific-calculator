@@ -33,45 +33,6 @@ function toggleRadDeg() {
     }
 }
 
-//------------------ TRIGONOMETRI --------------------
-function trigonometri(value) {
-    const operations = {
-        sin: (x) => Math.sin(x),
-        cos: (x) => Math.cos(x),
-        tan: (x) => Math.tan(x),
-    };
-
-    const formats = {
-        sin: (i, unit) => unit === 'deg' ? `sin₀(${i})` : `sinᵣ(${i})`,
-        cos: (i, unit) => unit === 'deg' ? `cos₀(${i})` : `cosᵣ(${i})`,
-        tan: (i, unit) => unit === 'deg' ? `tan₀(${i})` : `tanᵣ(${i})`,
-    };
-
-    if (data.staging.length !== 0) {
-        let angleInRadians = button.value === 'deg' ? data.staging.join('') * (Math.PI / 180) : data.staging.join('');
-        data.result = operations[value](angleInRadians);
-        data.formats.push(formats[value](data.staging.join(''), button.value));
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-        data.staging = [];
-    } else if (data.result !== 0 || data.result === 0) {
-        let i = data.result;
-        let angleInRadians = button.value === 'deg' ? data.result * (Math.PI / 180) : data.result;
-        data.result = operations[value](angleInRadians);
-        if (data.formats.length > 0 && /(sin|cos|tan)/.test(data.formats[data.formats.length - 1])) {
-            let j = data.formats[data.formats.length - 1];
-            data.formats.pop();
-            data.formats.push(formats[value](j, button.value));
-        } else {
-            data.formats.push(formats[value](i, button.value));
-        }
-        data.resultformat.push('active');
-        result.value = data.result;
-        operation.value = data.formats.join('');
-    }
-}
-
 //------------------ NUMBER --------------------------
 function number(value) {
     data.staging.push(value);
@@ -88,6 +49,7 @@ function constant(operationType) {
 
     data.result = operations[operationType]();
     data.formats.push(operationType);
+    data.resultformat = [];
     data.resultformat.push('active');
     operation.value = data.formats.join('');
     result.value = data.result;
@@ -175,6 +137,7 @@ function math_function(operationType) {
         i = data.staging.join('');
         data.result = operations[operationType](i);
         data.formats.push(formatMap[operationType](i));
+        data.resultformat = [];
         data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
@@ -183,7 +146,7 @@ function math_function(operationType) {
     } else if (data.result !== 0 || data.result === 0) {
         i = data.result;
         data.result = operations[operationType](i);
-        if (data.formats.length > 0 && /(ln|log|fact|√)/.test(data.formats[data.formats.length - 1])) {
+        if (data.formats.length > 0 && /(active)/.test(data.resultformat[data.resultformat.length - 1])) {
             j = data.formats[data.formats.length - 1];
             data.formats.pop();
             data.formats.push(formatMap[operationType](j));
@@ -191,6 +154,7 @@ function math_function(operationType) {
         } else {
             data.formats.push(formatMap[operationType](i));
         }
+        data.resultformat = [];
         data.resultformat.push('active');
         result.value = data.result;
         operation.value = data.formats.join('');
@@ -207,6 +171,47 @@ function factorialCalculation(value) {
     }
     else {
         return value * factorialCalculation(value - 1);
+    }
+}
+
+//------------------ TRIGONOMETRI --------------------
+function trigonometri(value) {
+    const operations = {
+        sin: (x) => Math.sin(x),
+        cos: (x) => Math.cos(x),
+        tan: (x) => Math.tan(x),
+    };
+
+    const formats = {
+        sin: (i, unit) => unit === 'deg' ? `sin₀(${i})` : `sinᵣ(${i})`,
+        cos: (i, unit) => unit === 'deg' ? `cos₀(${i})` : `cosᵣ(${i})`,
+        tan: (i, unit) => unit === 'deg' ? `tan₀(${i})` : `tanᵣ(${i})`,
+    };
+
+    if (data.staging.length !== 0) {
+        let angleInRadians = button.value === 'deg' ? data.staging.join('') * (Math.PI / 180) : data.staging.join('');
+        data.result = operations[value](angleInRadians);
+        data.formats.push(formats[value](data.staging.join(''), button.value));
+        data.resultformat = [];
+        data.resultformat.push('active');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+        data.staging = [];
+    } else if (data.result !== 0 || data.result === 0) {
+        let i = data.result;
+        let angleInRadians = button.value === 'deg' ? data.result * (Math.PI / 180) : data.result;
+        data.result = operations[value](angleInRadians);
+        if (data.formats.length > 0 && /(active)/.test(data.resultformat[data.resultformat.length - 1])) {
+            let j = data.formats[data.formats.length - 1];
+            data.formats.pop();
+            data.formats.push(formats[value](j, button.value));
+        } else {
+            data.formats.push(formats[value](i, button.value));
+        }
+        data.resultformat = [];
+        data.resultformat.push('active');
+        result.value = data.result;
+        operation.value = data.formats.join('');
     }
 }
 
