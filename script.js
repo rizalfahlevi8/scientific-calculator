@@ -1,5 +1,6 @@
 const result = document.getElementById('result');
 const operation = document.getElementById('operation');
+const button = document.getElementById('toggleButton')
 let data = {
     formats: [],
     operations: [],
@@ -21,6 +22,56 @@ function clearData() {
     console.log(data);
 }
 
+//------------------ RADIAN OR DEGREES ---------------
+function toggleRadDeg() {
+    if (button.innerText === "rad") {
+        button.innerText = "deg",
+            button.value = "deg"
+    } else {
+        button.innerText = "rad",
+        button.innerText = "rad"
+    }
+}
+
+//------------------ TRIGONOMETRI --------------------
+function trigonometri(value) {
+    const operations = {
+        sin: (x) => Math.sin(x),
+        cos: (x) => Math.cos(x),
+        tan: (x) => Math.tan(x),
+    };
+
+    const formats = {
+        sin: (i, unit) => unit === 'deg' ? `sin₀(${i})` : `sinᵣ(${i})`,
+        cos: (i, unit) => unit === 'deg' ? `cos₀(${i})` : `cosᵣ(${i})`,
+        tan: (i, unit) => unit === 'deg' ? `tan₀(${i})` : `tanᵣ(${i})`,
+    };
+
+    if (data.staging.length !== 0) {
+        let angleInRadians = button.value === 'deg' ? data.staging.join('') * (Math.PI / 180) : data.staging.join('');
+        data.result = operations[value](angleInRadians);
+        data.formats.push(formats[value](data.staging.join(''), button.value));
+        data.resultformat.push('active');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+        data.staging = [];
+    } else if (data.result !== 0 || data.result === 0) {
+        let i = data.result;
+        let angleInRadians = button.value === 'deg' ? data.result * (Math.PI / 180) : data.result;
+        data.result = operations[value](angleInRadians);
+        if (data.formats.length > 0 && /(sin|cos|tan)/.test(data.formats[data.formats.length - 1])) {
+            let j = data.formats[data.formats.length - 1];
+            data.formats.pop();
+            data.formats.push(formats[value](j, button.value));
+        } else {
+            data.formats.push(formats[value](i, button.value));
+        }
+        data.resultformat.push('active');
+        result.value = data.result;
+        operation.value = data.formats.join('');
+    }
+}
+
 //------------------ NUMBER --------------------------
 function number(value) {
     data.staging.push(value);
@@ -40,6 +91,8 @@ function constant(operationType) {
     data.resultformat.push('active');
     operation.value = data.formats.join('');
     result.value = data.result;
+    operation.value = data.formats.join('');
+    data.staging = [];
     console.log(data);
 }
 
@@ -156,7 +209,6 @@ function factorialCalculation(value) {
         return value * factorialCalculation(value - 1);
     }
 }
-
 
 //----------------- CALCULATE --------------------------
 function calculate() {
