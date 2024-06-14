@@ -23,13 +23,14 @@
                         </div>
                         <div class="input p-3">
                             <div class="row justify-content-start">
-                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="toggleRadDeg()" id="toggleButton" value="rad">rad</button>
+                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="toggleRadDeg()" id="toggleRadDeg" value="rad">rad</button>
+                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="toggleSecond()" id="toggleSecond" value="0">⇄</button>
                             </div>
                             <div class="row justify-content-center">
                                 <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="constant('e')">e</button>
-                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="trigonometri('sin')">sin</button>
-                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="trigonometri('cos')">cos</button>
-                                <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="trigonometri('tan')">tan</button>
+                                <button class="btn col-2 mx-md-2 mx-1 mb-2" id="trigonometric-sin" onclick="trigonometric('sin')">sin</button>
+                                <button class="btn col-2 mx-md-2 mx-1 mb-2" id="trigonometric-cos" onclick="trigonometric('cos')">cos</button>
+                                <button class="btn col-2 mx-md-2 mx-1 mb-2" id="trigonometric-tan" onclick="trigonometric('tan')">tan</button>
                                 <button class="btn col-2 mx-md-2 mx-1 mb-2" onclick="clearData()">AC</button>
                             </div>
                             <div class="row justify-content-center">

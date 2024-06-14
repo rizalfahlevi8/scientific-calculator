@@ -1,6 +1,7 @@
 const result = document.getElementById('result');
 const operation = document.getElementById('operation');
-const button = document.getElementById('toggleButton')
+const buttonRadDeg = document.getElementById('toggleRadDeg');
+const buttonSecond = document.getElementById('toggleSecond');
 let data = {
     formats: [],
     operations: [],
@@ -22,14 +23,44 @@ function clearData() {
     console.log(data);
 }
 
+//------------------ TOGGLE SECOND -------------------
+function toggleSecond() {
+    const button0 = [
+        { id: 'trigonometric-sin', newFunction: 'sec', newText: 'sec' },
+        { id: 'trigonometric-cos', newFunction: 'csc', newText: 'csc' },
+        { id: 'trigonometric-tan', newFunction: 'cot', newText: 'cot' },
+    ];
+    const button1 = [
+        { id: 'trigonometric-sin', newFunction: 'sin', newText: 'sin' },
+        { id: 'trigonometric-cos', newFunction: 'cos', newText: 'cos' },
+        { id: 'trigonometric-tan', newFunction: 'tan', newText: 'tan' },
+    ];
+    
+    if (buttonSecond.value === "0") {
+        button0.forEach(buttonObj => {
+            const element = document.getElementById(buttonObj.id);
+            element.setAttribute('onclick', `trigonometric('${buttonObj.newFunction}')`);
+            element.innerText = buttonObj.newText;
+        });
+        buttonSecond.value = "1";
+    } else {
+        button1.forEach(buttonObj => {
+            const element = document.getElementById(buttonObj.id);
+            element.setAttribute('onclick', `trigonometric('${buttonObj.newFunction}')`);
+            element.innerText = buttonObj.newText;
+        });
+        buttonSecond.value = "0";
+    }
+}
+
 //------------------ RADIAN OR DEGREES ---------------
 function toggleRadDeg() {
-    if (button.innerText === "rad") {
-        button.innerText = "deg",
-            button.value = "deg"
+    if (buttonRadDeg.innerText === "rad") {
+        buttonRadDeg.innerText = "deg",
+            buttonRadDeg.value = "deg"
     } else {
-        button.innerText = "rad",
-        button.innerText = "rad"
+        buttonRadDeg.innerText = "rad",
+            buttonRadDeg.value = "rad"
     }
 }
 
@@ -174,24 +205,30 @@ function factorialCalculation(value) {
     }
 }
 
-//------------------ TRIGONOMETRI --------------------
-function trigonometri(value) {
+//------------------ TRIGONOMETRIC --------------------
+function trigonometric(value) {
     const operations = {
         sin: (x) => Math.sin(x),
         cos: (x) => Math.cos(x),
         tan: (x) => Math.tan(x),
+        sec: (x) => 1/Math.cos(x),
+        csc: (x) => 1/Math.sin(x),
+        cot: (x) => 1/Math.tan(x),
     };
 
     const formats = {
         sin: (i, unit) => unit === 'deg' ? `sin₀(${i})` : `sinᵣ(${i})`,
         cos: (i, unit) => unit === 'deg' ? `cos₀(${i})` : `cosᵣ(${i})`,
         tan: (i, unit) => unit === 'deg' ? `tan₀(${i})` : `tanᵣ(${i})`,
+        sec: (i, unit) => unit === 'deg' ? `sec₀(${i})` : `secᵣ(${i})`,
+        csc: (i, unit) => unit === 'deg' ? `csc₀(${i})` : `cscᵣ(${i})`,
+        cot: (i, unit) => unit === 'deg' ? `cot₀(${i})` : `cotᵣ(${i})`,
     };
 
     if (data.staging.length !== 0) {
-        let angleInRadians = button.value === 'deg' ? data.staging.join('') * (Math.PI / 180) : data.staging.join('');
+        let angleInRadians = buttonRadDeg.value === 'deg' ? data.staging.join('') * (Math.PI / 180) : data.staging.join('');
         data.result = operations[value](angleInRadians);
-        data.formats.push(formats[value](data.staging.join(''), button.value));
+        data.formats.push(formats[value](data.staging.join(''), buttonRadDeg.value));
         data.resultformat = [];
         data.resultformat.push('active');
         result.value = data.result;
@@ -199,14 +236,14 @@ function trigonometri(value) {
         data.staging = [];
     } else if (data.result !== 0 || data.result === 0) {
         let i = data.result;
-        let angleInRadians = button.value === 'deg' ? data.result * (Math.PI / 180) : data.result;
+        let angleInRadians = buttonRadDeg.value === 'deg' ? data.result * (Math.PI / 180) : data.result;
         data.result = operations[value](angleInRadians);
         if (data.formats.length > 0 && /(active)/.test(data.resultformat[data.resultformat.length - 1])) {
             let j = data.formats[data.formats.length - 1];
             data.formats.pop();
-            data.formats.push(formats[value](j, button.value));
+            data.formats.push(formats[value](j, buttonRadDeg.value));
         } else {
-            data.formats.push(formats[value](i, button.value));
+            data.formats.push(formats[value](i, buttonRadDeg.value));
         }
         data.resultformat = [];
         data.resultformat.push('active');
