@@ -35,7 +35,7 @@ function toggleSecond() {
         { id: 'trigonometric-cos', newFunction: 'cos', newText: 'cos' },
         { id: 'trigonometric-tan', newFunction: 'tan', newText: 'tan' },
     ];
-    
+
     if (buttonSecond.value === "0") {
         button0.forEach(buttonObj => {
             const element = document.getElementById(buttonObj.id);
@@ -66,6 +66,9 @@ function toggleRadDeg() {
 
 //------------------ NUMBER --------------------------
 function number(value) {
+    if(/(active)/.test(data.resultformat[data.resultformat.length - 1])){
+        data.formats.pop();
+    }
     data.staging.push(value);
     result.value = data.staging.join('');
     console.log(data);
@@ -211,9 +214,9 @@ function trigonometric(value) {
         sin: (x) => Math.sin(x),
         cos: (x) => Math.cos(x),
         tan: (x) => Math.tan(x),
-        sec: (x) => 1/Math.cos(x),
-        csc: (x) => 1/Math.sin(x),
-        cot: (x) => 1/Math.tan(x),
+        sec: (x) => 1 / Math.cos(x),
+        csc: (x) => 1 / Math.sin(x),
+        cot: (x) => 1 / Math.tan(x),
     };
 
     const formats = {
@@ -310,24 +313,26 @@ function parenthesesClose() {
     jumlah = jumlah_open - jumlah_close;
 
     if (jumlah > 0) {
-        if (data.staging.length !== 0) {
+        if (/(active)/.test(data.resultformat[data.resultformat.length - 1])) {
+            data.operations.push(data.result, ')');
+            data.formats.push(')');
+            let formula_str = balanceParentheses(data.operations);
+            data.result = eval(formula_str.join(''));
+        } else if (data.staging.length !== 0) {
             data.operations.push(data.staging.join(''), ')');
             data.formats.push(data.staging.join(''), ')');
-            formula_str = balanceParentheses(data.operations);
+            let formula_str = balanceParentheses(data.operations);
             data.result = eval(formula_str.join(''));
-            data.staging = [];
-            operation.value = data.formats.join('');
-            result.value = data.result;
         } else if (data.staging.length === 0) {
             data.operations.push(data.result, ')');
             data.formats.push(data.result, ')');
-            formula_str = balanceParentheses(data.operations);
-            console.log(formula_str);
+            let formula_str = balanceParentheses(data.operations);
             data.result = eval(formula_str.join(''));
-            data.staging = [];
-            operation.value = data.formats.join('');
-            result.value = data.result;
         }
+        data.staging = [];
+        data.resultformat = [];
+        operation.value = data.formats.join('');
+        result.value = data.result;
     }
     console.log(data);
 }
@@ -339,22 +344,21 @@ function parenthesesOpen() {
         data.formats.push(data.staging.join(''), '×', '(');
         formula_str = balanceParentheses(data.operations);
         data.result = eval(formula_str.join(''));
-        data.staging = [];
-        operation.value = data.formats.join('');
-        result.value = data.result;
-    } else if (data.staging.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1])) && data.operations[data.operations.length - 1] !== ")") {
-        data.operations.push('(');
-        data.formats.push('(');
-        data.staging = [];
-        operation.value = data.formats.join('');
-        result.value = data.result;
+    } else if (data.staging.length === 0 && /(active)/.test(data.resultformat[data.resultformat.length - 1])) {
+        data.operations.push(data.result, '*', '(');
+        data.formats.push('×', '(');
     } else if (data.staging.length === 0 && data.operations[data.operations.length - 1] === ")") {
         data.operations.push('*', '(');
         data.formats.push('×', '(');
-        data.staging = [];
-        operation.value = data.formats.join('');
-        result.value = data.result;
+    } else if (data.staging.length === 0 && isNaN(parseFloat(data.operations[data.operations.length - 1]))) {
+        data.operations.push('(');
+        data.formats.push('(');
     }
+    data.staging = [];
+    data.resultformat = [];
+    operation.value = data.formats.join('');
+    result.value = data.result;
+
     console.log(data);
 }
 
@@ -372,7 +376,7 @@ function balanceParentheses(value) {
         let jumlah_close = data_temporary.filter(function (item) {
             return item === ")";
         }).length;
-        jumlah = jumlah_open - jumlah_close;
+        let jumlah = jumlah_open - jumlah_close;
 
         if (isNaN(parseFloat(data_temporary[data_temporary.length - 1])) && !data_temporary[data_temporary.length - 1].includes(")")) {
             data_temporary.push(1);
