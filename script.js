@@ -130,6 +130,7 @@ function operator(value, format) {
             }
         }
     }
+    data.resultformat = [];
     data.operations.push(value);
     data.formats.push(format)
     operation.value = data.formats.join('');
