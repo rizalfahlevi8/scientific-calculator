@@ -1,3 +1,9 @@
+/* =======================================================
+* App Name: Scientific-Calculator
+* App URL: https://github.com/rizalfahlevi8/scientific-calculator
+* Developer: Muhammad Rizal Fahlevi
+======================================================== */
+
 const result = document.getElementById('result');
 const operation = document.getElementById('operation');
 const buttonRadDeg = document.getElementById('toggleRadDeg');
