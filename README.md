@@ -30,4 +30,4 @@ Link Scientific Calculator : [Scientific Calculator (click)](https://rizalfahlev
 We welcome contributions from anyone who wants to participate in the development of the "Scientific Calculator" application. If you would like to contribute, please create a pull request and we will review your contribution.
 
 ## Contact
-If you have questions or problems, don't hesitate to contact us via the social media listed on our profile page.
+If you have questions or problems, don't hesitate to contact us via the social media listed on [our profile page.](https://github.com/rizalfahlevi8)
